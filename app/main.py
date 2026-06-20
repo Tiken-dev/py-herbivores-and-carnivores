@@ -1,8 +1,21 @@
 from __future__ import annotations
 
 
+class AliveList(list):
+    def __repr__(self) -> str:
+        result = []
+        for animal in self:
+            current = (
+                f"{{Name: {animal.name}, "
+                f"Health: {animal.health}, "
+                f"Hidden: {animal.hidden}}}"
+            )
+            result.append(current)
+        return f"[{', '.join(result)}]"
+
+
 class Animal:
-    alive = []
+    alive = AliveList()
 
     def __init__(
             self,
@@ -13,14 +26,8 @@ class Animal:
         self.name = name
         self.health = health
         self.hidden = hidden
+        Animal.alive = AliveList(Animal.alive)
         Animal.alive.append(self)
-
-    def __repr__(self) -> str:
-        return (
-            f"{{Name: {self.name}, "
-            f"Health: {self.health}, "
-            f"Hidden: {self.hidden}}}"
-        )
 
 
 class Herbivore(Animal):
@@ -36,11 +43,3 @@ class Carnivore(Animal):
                 other.health -= 50
             if other.health <= 0:
                 Animal.alive.remove(other)
-
-
-# rabbit = Herbivore("Rabbit")
-# print(rabbit.hidden)
-# lion = Carnivore("Lion")
-#
-# print(lion.bite(rabbit))
-print(Animal.alive)
